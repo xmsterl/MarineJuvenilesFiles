@@ -1,5 +1,5 @@
 rm(list = ls()) ##CLEAN EVERYTHING
-setwd('U:\\Manuscript\\Data') ##CHANGE THIS FOLDER TO YOUR OWN LOCATION
+setwd('U:\\Manuscript\\Timeseries') ##CHANGE THIS FOLDER TO YOUR OWN LOCATION
 source("U:\\Manuscript\\Code_figures\\Script_functions_MJ.R") #Load script#
 xlabtime = expression(atop("",atop("Time (years)","")))
 library(ggpubr)
@@ -80,7 +80,7 @@ SBMTimePlotR1maxHighQ_res = ggplot(data =  AllTimeData_R1maxHighQ,
              size = 0.5, aes(colour = "R2", y = R2 * 1000)) +
   #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
   layout + 
-  scale_color_manual(values = c("#0499BE", "#FDE333"),
+  scale_color_manual(values = c("#4B0055", "#36E9A7"),
                      labels = c("Focal nursery", "Adult habitat"))+
   ylab(expression(atop("", atop("Food density",  paste("(mg ", L^-1, ")"))))) +
   xlab(xlabtime) +
@@ -109,10 +109,14 @@ ggarrange(SBMTimePlotR1maxHighQ +
                   axis.ticks.x=element_blank(),
                   plot.margin = unit(c(0,1,0,0), 'lines')),
           HighR1max_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-            xlim(0, 20), 
+            xlim(0, 20) + 
+            theme(axis.title.x=element_blank(),
+                  axis.text.x=element_blank(),
+                  axis.ticks.x=element_blank(),
+                  plot.margin = unit(c(0,1,0,0), 'lines')), 
           SBMTimePlotR1maxHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
           InterR1max_growth + xlim(0,20) + 
-            theme(plot.margin = unit(c(0,1,0,0) , 'lines')), 
+            theme(plot.margin = unit(c(0,1,0,0) , 'lines')),
           nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
           align = "hv")
 
@@ -120,10 +124,11 @@ ggarrange(SBMTimePlotR1maxHighQ +
 #----------------------------------------------------------------------------------------#
 # Result 2: increased mortality in focal nursery
 #----------------------------------------------------------------------------------------#
+Time_loc = "U:\\Manuscript\\Runs timeserie\\Runs timeserie\\"
 
-DataNames = c("HighQ_nomort",
-              "HighQ_Intermort",
-              "HighQ_Highmort")
+DataNames = c("HighQ_noMort",
+              "HighQ_InterMort",
+              "HighQ_HighMort")
 BifPar = c(0, 0.003, 0.006)
 minMaxTime <- data.frame()
 AllTimeData <- data.frame()
@@ -167,9 +172,9 @@ MortTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
         legend.text = element_text(size=11),
         axis.text=element_text(size=14),
         axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 330, label = 'Low', size = 6) +
-  annotate(geom = "text", x = 75, y = 330, label = "Intermediate", size = 6) + 
-  annotate(geom = "text", x = 125, y = 330, label = "High", size = 6) +
+  annotate(geom = "text", x = 25, y = 300, label = 'Low', size = 6) +
+  annotate(geom = "text", x = 75, y = 300, label = "Intermediate", size = 6) + 
+  annotate(geom = "text", x = 125, y = 300, label = "High", size = 6) +
   NULL
 #MortTimePlotHighQ
 
@@ -182,7 +187,7 @@ MortTimePlotHighQ_res = ggplot(data =  AllTimeData_HighQ,
              size = 0.5, aes(colour = "bJuveniles", y = R2 * 1000)) +
   #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
   layout + 
-  scale_color_manual(values = c("#0499BE", "#FDE333"),
+  scale_color_manual(values = c("#4B0055", "#36E9A7"),
                      labels = c("Focal nursery", "Adult habitat"))+
   ylab(expression(atop("", atop("Food density",  paste("(mg ", L^-1, ")"))))) +
   xlab(xlabtime) +
@@ -209,7 +214,11 @@ ggarrange(MortTimePlotHighQ +
                   axis.ticks.x=element_blank(),
                   plot.margin = unit(c(0,1,0,0), 'lines')),
           NoMortFocal_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-            xlim(0,7), 
+            xlim(0,7) + 
+            theme(axis.title.x=element_blank(),
+                  axis.text.x=element_blank(),
+                  axis.ticks.x=element_blank(),
+                  plot.margin = unit(c(0,1,0,0), 'lines')), 
           MortTimePlotHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
           InterMortFocal_growth + xlim(0,7) +
             theme(plot.margin = unit(c(0,1,0,0), 'lines')),
@@ -217,7 +226,7 @@ ggarrange(MortTimePlotHighQ +
           align = "hv")
 
 #----------------------------------------------------------------------------------------#
-# Result 3: increased mortality in adult habitat
+# Result 3: increased mortality in offshore habitat
 #----------------------------------------------------------------------------------------#
 
 DataNames = c("HighQ_HighR1max_NoNSMort",
@@ -261,20 +270,23 @@ MortTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
   guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
   geom_vline(xintercept = (subset(minMaxTime, BifPar > 0)$MinTime) / Season, 
              linetype = 'dashed') +
-  theme(legend.position = c(0.82, 0.80),
+  theme(legend.position = c(0.82, 0.75),
         legend.background = element_blank(),
-        legend.text = element_text(size=12),
+        legend.text = element_text(size=11),
         axis.text=element_text(size=14),
         axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 330, label = 'Low', size = 6) +
-  annotate(geom = "text", x = 75, y = 330, label = "Intermediate", size = 6) + 
-  annotate(geom = "text", x = 125, y = 330, label = "High", size = 6) +
-  xlim(0, 150) +
+  annotate(geom = "text", x = 25, y = 300, label = 'Low', size = 10) +
+  annotate(geom = "text", x = 75, y = 300, label = "Intermediate", size = 10) + 
+  annotate(geom = "text", x = 125, y = 300, label = "High", size = 10) +
+  xlim(0, 150) + ylim(0, 310) +
   NULL
 #MortTimePlotHighQ
 
 
 # For low quality of WS
+
+Time_loc = "U:\\Manuscript\\Runs timeserie\\Runs timeserie\\"
+
 DataNames = c("HighQ_LowR1max_NoNSMort",
               "HighQ_LowR1max_InterNSMort",
               "HighQ_LowR1max_HighNSMort")
@@ -318,7 +330,7 @@ MortTimePlotHighQ_lowR1 = ggplot(data =  AllTimeData_HighQ,
              linetype = 'dashed') +
   theme(legend.position = 'none',
         legend.background = element_blank(),
-        legend.text = element_text(size=12),
+        legend.text = element_text(size=11),
         axis.text=element_text(size=14),
         axis.title=element_text(size=20)) +
   # annotate(geom = "text", x = 75, y = 100, label = "0.005 / Day", size = 4) + 
@@ -396,9 +408,9 @@ ConnTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
         legend.text = element_text(size=11),
         axis.text=element_text(size=14),
         axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 275, label = "High", size = 6) +
-  annotate(geom = "text", x = 75, y = 275, label = "Intermediate", size = 6) + 
-  annotate(geom = "text", x = 125, y = 275, label = "Low", size = 6) +
+  annotate(geom = "text", x = 25, y = 290, label = "High", size = 6) +
+  annotate(geom = "text", x = 75, y = 290, label = "Intermediate", size = 6) + 
+  annotate(geom = "text", x = 125, y = 290, label = "Low", size = 6) +
   scale_x_continuous(breaks = c(0, 25, 50, 75, 100, 125, 150),
                      labels = c(0, 25, 50, 75, 100, 125, 150), 
                      limits = c(0,150)) +
@@ -406,6 +418,8 @@ ConnTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
 #ConnTimePlotHighQ
 
 # High quality other nurseries, high mortality NS
+Time_loc = "U:\\Manuscript\\Runs timeserie\\Runs timeserie\\"
+
 DataNames = c("HighQ_HighNSMort_HighConnect",
               "HighQ_HighNSMort_InterConnect",
               "HighQ_HighNSMort_LowConnect")
@@ -463,6 +477,8 @@ ConnHighQHighNSMort = ggplot(data =  AllTimeData_HighQ,
 
 
 # High quality other nurseries, high mortality WS
+Time_loc = "U:\\Manuscript\\Timeseries\\"
+
 DataNames = c("HighQ_HighWSMort_HighConnect",
               "HighQ_HighWSMort_InterConnect",
               "HighQ_HighWSMort_LowConnect")
@@ -520,9 +536,11 @@ ConnHighQHighWSMort = ggplot(data =  AllTimeData_HighQ,
 
 
 # High quality other nurseries, low food availability focal nursery
-DataNames = c("HighQ_LowR1max_HighConnect",
-              "HighQ_LowR1max_InterConnect",
-              "HighQ_LowR1max_LowConnect")
+setwd('U:\\Manuscript\\Appendix')
+Time_loc = "U:\\Manuscript\\Appendix\\"
+DataNames = c("HighQ_LowR1max_HighConnect_LongTime",
+              "HighQ_LowR1max_InterConnect_LongTime",
+              "HighQ_LowR1max_LowConnect_LongTime")
 BifPar = c(1, 0.5, 0.1)
 minMaxTime <- data.frame()
 AllTimeData <- data.frame()
@@ -545,9 +563,11 @@ AllTimeData_HighQ = AllTimeData
 AllTimeData_HighQ$Juv_Ad_bm = AllTimeData_HighQ$Juv_bm + 
   AllTimeData_HighQ$Ad_bm
 
+AllTimeData_HighQ = AllTimeData_HighQ[37500:85003,]
 
+###Make plot mortality series High Q#####
 ConnHighQLowR1max = ggplot(data =  AllTimeData_HighQ,
-                             aes(x = Time/Season, y = Larv_bm * 1000)) +
+                                   aes(x = Time/Season, y = Larv_bm * 1000)) +
   geom_point(data = subset(AllTimeData_HighQ, Larv_bm > 0), size = 0.5, aes(colour = "aJuveniles")) +
   #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
   geom_point(data = subset(AllTimeData_HighQ, Juv_Ad_bm > 0), 
@@ -559,21 +579,18 @@ ConnHighQLowR1max = ggplot(data =  AllTimeData_HighQ,
   ylab(expression(atop("", atop("Fish biomass",  paste("(mg ", L^-1, ")"))))) +
   xlab(xlabtime) +
   guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, 1-BifPar > 0)$MinTime) / Season, 
+  geom_vline(xintercept = (subset(minMaxTime, MinTime > 0)$MinTime) / Season, 
              linetype = 'dashed') +
   theme(legend.position = c(0.83, 0.85),
         legend.background = element_blank(),
         legend.text = element_text(size=11),
         axis.text=element_text(size=14),
         axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 120, label = "High", size = 6) +
-  annotate(geom = "text", x = 75, y = 120, label = "Intermediate", size = 6) + 
-  annotate(geom = "text", x = 125, y = 120, label = "Low", size = 6) +
-  scale_x_continuous(breaks = c(0, 25, 50, 75, 100, 125, 150),
-                     labels = c(0, 25, 50, 75, 100, 125, 150), 
-                     limits = c(0,150)) +
+  annotate(geom = "text", x = 175, y = 150, label = 'Low', size = 6) +
+  annotate(geom = "text", x = 225, y = 150, label = "Intermediate", size = 6) + 
+  annotate(geom = "text", x = 275, y = 150, label = "High", size = 6) +
+  xlim(150,300) +  
   NULL
-#ConnHighQLowR1max
 
 
 ggarrange(ConnTimePlotHighQ +
@@ -645,12 +662,12 @@ SBMTimePlotR1maxLowQ = ggplot(data =  AllTimeData_R1maxHighQ,
              linetype = 'dashed') +
   theme(legend.position = c(0.82, 0.75),
         legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 300, label = 'High', size = 6) + 
-  annotate(geom = "text", x = 75, y = 300, label = 'Intermediate', size = 6) + 
-  annotate(geom = "text", x = 125, y = 300, label = 'Low', size = 6) +
+        legend.text = element_text(size=20),
+        axis.text=element_text(size=18),
+        axis.title=element_text(size=24)) +
+  annotate(geom = "text", x = 25, y = 300, label = 'High', size = 10) + 
+  annotate(geom = "text", x = 75, y = 300, label = 'Intermediate', size = 10) + 
+  annotate(geom = "text", x = 125, y = 300, label = 'Low', size = 10) +
   NULL
 SBMTimePlotR1maxLowQ
 
@@ -698,11 +715,70 @@ MortTimePlotLowQ = ggplot(data =  AllTimeData_HighQ,
              linetype = 'dashed') +
   theme(legend.position = c(0.82, 0.75),
         legend.background = element_blank(),
+        legend.text = element_text(size=20),
+        axis.text=element_text(size=18),
+        axis.title=element_text(size=24)) +
+  annotate(geom = "text", x = 25, y = 330, label = 'Low', size = 10) +
+  annotate(geom = "text", x = 75, y = 330, label = "Intermediate", size = 10) + 
+  annotate(geom = "text", x = 125, y = 330, label = "High", size = 10) +
+  NULL
+MortTimePlotLowQ
+
+## Plot 3: equilibrium in plot 5B
+setwd('U:\\Manuscript\\Appendix')
+Time_loc = "U:\\Manuscript\\Appendix\\"
+
+DataNames = c("HighQ_LowR1max_HighConnect_LongTime",
+              "HighQ_LowR1max_InterConnect_LongTime",
+              "HighQ_LowR1max_LowConnect_LongTime")
+BifPar = c(1, 0.5, 0.1)
+minMaxTime <- data.frame()
+AllTimeData <- data.frame()
+
+for (i in 1:length(BifPar)) {
+  filename <- paste0(Time_loc, DataNames[i], ".out", sep = '')
+  GetData <- read.table(filename, header = F)
+  GiveNames(GetData, maxcohorts = CohNr)
+  GetData$Bif = BifPar[i]
+  NewData = data.frame(BifPar = BifPar[i], MinTime = min(GetData$Time),
+                       MaxTime = max(GetData$Time))
+  minMaxTime = rbind(minMaxTime, NewData)
+  AllTimeData = rbind(AllTimeData, GetData)
+}
+
+rm(GetData)
+AllTimeData_HighQ = AllTimeData
+
+# Add column with combined Subadult and Adult biomass
+AllTimeData_HighQ$Juv_Ad_bm = AllTimeData_HighQ$Juv_bm + 
+  AllTimeData_HighQ$Ad_bm
+
+AllTimeData_HighQ = AllTimeData_HighQ[37500:85003,]
+
+###Make plot mortality series High Q#####
+MortTimePlotLowQ_LongTime = ggplot(data =  AllTimeData_HighQ,
+                          aes(x = Time/Season, y = Larv_bm * 1000)) +
+  geom_point(data = subset(AllTimeData_HighQ, Larv_bm > 0), size = 0.5, aes(colour = "aJuveniles")) +
+  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
+  geom_point(data = subset(AllTimeData_HighQ, Juv_Ad_bm > 0), 
+             size = 0.5, aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) +
+  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
+  layout + 
+  scale_color_manual(values = c("#4B0055", "#36E9A7"),
+                     labels = c("Juveniles in focal nursery", "Subadults + Adults")) +
+  ylab(expression(atop("", atop("Fish biomass",  paste("(mg ", L^-1, ")"))))) +
+  xlab(xlabtime) +
+  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
+  geom_vline(xintercept = (subset(minMaxTime, MinTime > 0)$MinTime) / Season, 
+             linetype = 'dashed') +
+  theme(legend.position = c(0.82, 0.75),
+        legend.background = element_blank(),
         legend.text = element_text(size=11),
         axis.text=element_text(size=14),
         axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 330, label = 'Low', size = 6) +
-  annotate(geom = "text", x = 75, y = 330, label = "Intermediate", size = 6) + 
-  annotate(geom = "text", x = 125, y = 330, label = "High", size = 6) +
+  annotate(geom = "text", x = 175, y = 150, label = 'Low', size = 6) +
+  annotate(geom = "text", x = 225, y = 150, label = "Intermediate", size = 6) + 
+  annotate(geom = "text", x = 275, y = 150, label = "High", size = 6) +
+  xlim(150,300) +  
   NULL
-MortTimePlotLowQ
+MortTimePlotLowQ_LongTime

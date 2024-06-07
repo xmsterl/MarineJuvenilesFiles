@@ -29,7 +29,7 @@ FoodFocalBifPlot <- ggplot(data=FoodFocalBif, aes(bif_par, y=Larv_bm*1000, color
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14)) + 
+        legend.text=element_text(size=18)) + 
   scale_x_continuous(breaks = c(0.900, 0.925, 0.950, 0.975, 1.000), 
                      labels = c(0.1, 0.075, 0.05, 0.025, 0))
 
@@ -58,7 +58,7 @@ MortFocalBifPlot <- ggplot(data=MortFocalBif, aes(bif_par, y=Larv_bm*1000, color
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14))
+        legend.text=element_text(size=18))
 
 MortFocalBifPlot
 
@@ -87,7 +87,7 @@ MortAdultBifPlot <- ggplot(data=MortAdultBif, aes(bif_par, y=Larv_bm*1000, color
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14))
+        legend.text=element_text(size=18))
 
 MortAdultBifPlot
 
@@ -110,7 +110,7 @@ MortAdultBifPlot_lowQ <- ggplot(data=MortAdultBif_lowQ, aes(bif_par, y=Larv_bm*1
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14))
+        legend.text=element_text(size=18))
 
 MortAdultBifPlot_lowQ
 
@@ -137,7 +137,7 @@ ConnFigAPlot <- ggplot(data=ConnFigA, aes(bif_par, y=Larv_bm*1000, color='Juveni
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14)) +
+        legend.text=element_text(size=18)) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), 
                      labels = c(1, 0.75, 0.50, 0.25, 0))
 
@@ -167,7 +167,7 @@ ConnFigBPlot <- ggplot(data=ConnFigB, aes(bif_par, y=Larv_bm*1000, color='Juveni
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14)) +
+        legend.text=element_text(size=18)) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), 
                      labels = c(1, 0.75, 0.50, 0.25, 0))
 
@@ -197,7 +197,7 @@ ConnFigCPlot <- ggplot(data=ConnFigC, aes(bif_par, y=Larv_bm*1000, color='Juveni
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14)) +
+        legend.text=element_text(size=18)) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), 
                      labels = c(1, 0.75, 0.50, 0.25, 0))
 
@@ -227,7 +227,7 @@ ConnFigDPlot <- ggplot(data=ConnFigD, aes(bif_par, y=Larv_bm*1000, color='Juveni
   guides(color = guide_legend(override.aes = list(size = 3))) +
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=20),
-        legend.text=element_text(size=14)) +
+        legend.text=element_text(size=18)) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), 
                      labels = c(1, 0.75, 0.50, 0.25, 0))
 
