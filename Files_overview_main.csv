@@ -1,0 +1,49 @@
+Name;Reason of run;R1max;Size range mortality;mu_size;connect;bif_par;Figure;Step size
+Fig2_HighQ_HighR1max;Effect of decreasing food productivity in focal nursery;0,075;NA;0;1;Time;2;NA
+Fig2_HighQ_InterR1max;Effect of decreasing food productivity in focal nursery;0,025;NA;0;1;Time;2;NA
+Fig2_HighQ_LowR1max;Effect of decreasing food productivity in focal nursery;0,005;NA;0;1;Time;2;NA
+;;;;;;;;
+Fig3_HighQ_nomort;Effect of increasing mortality in focal nursery;0,075;0,351-100;0;1;Time;3;NA
+Fig3_HighQ_Intermort;Effect of increasing mortality in focal nursery;0,075;0,351-100;0,003;1;Time;3;NA
+Fig3_HighQ_Highmort;Effect of increasing mortality in focal nursery;0,075;0,351-100;0,006;1;Time;3;NA
+;;;;;;;;
+Fig4_HighQ_HighR1max_NoNSMort;Effect of increasing mortality in offshore habitat with high quality of focal nursery;0,075;100-210;0;1;Time;4A;NA
+Fig4_HighQ_HighR1max_InterNSMort;Effect of increasing mortality in offshore habitat with high quality of focal nursery;0,075;100-210;0,005;1;Time;4A;NA
+Fig4_HighQ_HighR1max_HighNSMort;Effect of increasing mortality in offshore habitat with high quality of focal nursery;0,075;100-210;0,01;1;Time;4A;NA
+;;;;;;;;
+Fig4_HighQ_LowR1max_NoNSMort;Effect of increasing mortality in offshore habitat with low quality of focal nursery;0,01;100-210;0;1;Time;4B;NA
+Fig4_HighQ_LowR1max_InterNSMort;Effect of increasing mortality in offshore habitat with low quality of focal nursery;0,01;100-210;0,005;1;Time;4B;NA
+Fig4_HighQ_LowR1max_HighNSMort;Effect of increasing mortality in offshore habitat with low quality of focal nursery;0,01;100-210;0,01;1;Time;4B;NA
+;;;;;;;;
+Fig5A_HighQ_HighConnect;Effect of decreasing connectivity with high quality of all habitats;0,075;NA;0;1;Time;5A;NA
+Fig5A_HighQ_InterConnect;Effect of decreasing connectivity with high quality of all habitats;0,075;NA;0;0,5;Time;5A;NA
+Fig5A_HighQ_LowConnect;Effect of decreasing connectivity with high quality of all habitats;0,075;NA;0;0,1;Time;5A;NA
+;;;;;;;;
+Fig5B_HighQ_LowR1max_HighConnect;Effect of decreasing connectivity with low food productivity in focal nursery;0,01;NA;0;1;Time;5B;NA
+Fig5B_HighQ_LowR1max_InterConnect;Effect of decreasing connectivity with low food productivity in focal nursery;0,01;NA;0;0,5;Time;5B;NA
+Fig5B_HighQ_LowR1max_LowConnect;Effect of decreasing connectivity with low food productivity in focal nursery;0,01;NA;0;0,1;Time;5B;NA
+;;;;;;;;
+Fig5C_HighQ_HighWSMort_HighConnect;Effect of decreasing connectivity with high mortality in focal nursery;0,075;0,351-100;0,004;1;Time;5C;NA
+Fig5C_HighQ_HighWSMort_InterConnect;Effect of decreasing connectivity with high mortality in focal nursery;0,075;0,351-100;0,004;0,5;Time;5C;NA
+Fig5C_HighQ_HighWSMort_LowConnect;Effect of decreasing connectivity with high mortality in focal nursery;0,075;0,351-100;0,004;0,1;Time;5C;NA
+;;;;;;;;
+Fig5D_HighQ_HighNSMort_HighConnect;Effect of decreasing connectivity with high mortality in offshore habitat;0,075;100-210;0,004;1;Time;5D;NA
+Fig5D_HighQ_HighNSMort_InterConnect;Effect of decreasing connectivity with high mortality in offshore habitat;0,075;100-210;0,004;0,5;Time;5D;NA
+Fig5D_HighQ_HighNSMort_LowConnect;Effect of decreasing connectivity with high mortality in offshore habitat;0,075;100-210;0,004;0,1;Time;5D;NA
+;;;;;;;;
+LowQ_HighR1max;Effect of decreasing food productivity in focal nursery with low quality alternative nurseries;0,075;NA;0;1;Time;6;NA
+LowQ_InterR1max;Effect of decreasing food productivity in focal nursery with low quality alternative nurseries;0,025;NA;0;1;Time;6;NA
+LowQ_LowR1max;Effect of decreasing food productivity in focal nursery with low quality alternative nurseries;0,005;NA;0;1;Time;6;NA
+;;;;;;;;
+LowQ_nomort;Effect of increasing mortality in focal nursery with low quality alternative nurseries;0,075;0,351-100;0;1;Time;7;NA
+LowQ_Intermort;Effect of increasing mortality in focal nursery with low quality alternative nurseries;0,075;0,351-100;0,003;1;Time;7;NA
+LowQ_Highmort;Effect of increasing mortality in focal nursery with low quality alternative nurseries;0,075;0,351-100;0,006;1;Time;7;NA
+;;;;;;;;
+test_R1maxbif;Effect of food productivity in focal nursery;0,1-0;NA;0;1;R1max;8;-0,0001
+FocalMortBif;Effect of mortality in focal nursery;0,075;0,351-100;0-0,006;1;mu_size;9;0,0001
+AdultMortBif_HighR1max;Effect of mortality in offshore habitat with high quality of focal nursery;0,075;100-210;0-0,006;1;mu_size;10;0,0001
+AdultMortBif_LowR1max;Effect of mortality in offshore habitat with low quality of focal nursery;0,01;100-210;0-0,006;1;mu_size;11;0,0001
+Connectivity_figA;Effect of connectivity with high quality of all habitats;0,075;NA;0;1-0;connect;12;-0,01
+Connectivity_figB;Effect of connectivity with low food productivity in focal nursery;0,01;NA;0;1-0;connect;13;-0,01
+Connectivity_figC;Effect of connectivity with high mortality in focal nursery;0,075;0,351-100;0,004;1-0;connect;14;-0,01
+Connectivity_figD;Effect of connectivity with high mortality in offshore habitat;0,075;100-210;0,004;1-0;connect;15;-0,01
