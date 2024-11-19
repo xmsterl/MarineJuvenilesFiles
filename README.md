@@ -6,7 +6,7 @@ This folder contains all cvf and isf files to make the figures. It contains two 
 # R code
 This folder contains the R code which we used to make the figures.
 
-**Script_appendix_bif.R:** make figures from appendix D.
+**Script_appendix_bif.R:** make figures from appendix D. <br />
 **Script_appendix_compdif.R:** make figures from appendix A.
 **Script_appendix_lowQnurs.R:** make figures from appendix C.
 **Script_appendix_nonurs.R:** make figures from appendix B.
