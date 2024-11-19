@@ -1,7 +1,7 @@
-This repository contains all files that are necessary to recreate the figures from the manuscript.
+This repository contains all files that are necessary to recreate the figures from the manuscript. 
 
 # cvf & isf files
-This folder contains all cvf and isf files to make the figures. It contains two subfolders, one containing the files for the figures from the main text, and one for the figures from the appendix.
+This folder contains all cvf and isf files to make the figures. It contains two subfolders, one containing the files for the figures from the main text, and one for the figures from the appendix. The files **files_overview_appendix** and **files_overview_main** contain a detailed description of every file.
 
 # R code
 This folder contains the R code which we used to make the figures.
