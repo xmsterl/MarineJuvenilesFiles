@@ -62,9 +62,9 @@ p1 = ggplot(data =  AllTimeData_R1maxHighQ,
   NULL
 
 
-# ggsave("../Plots/App_lowQ_fig1.png", plot = p1, width = 1920/2, height = 1107/2,
-#        scale = 2.5,
-#        units = "px")
+ggsave("../Plots/Appendix_FoodFocal_LowQ.png", plot = p1, width = 1920/2, height = 1107/2,
+       scale = 2.5, dpi = 300,
+       units = "px")
 
 
 ####___Low Q nurs appendix Fig 2: (Result 2): Increasing mortality in the focal nursery____#####
@@ -124,7 +124,7 @@ p2 = ggplot(data =  AllTimeData_HighQ,
   annotate(geom = "text", x = 125, y = 330, label = "High", size = 6) +
   NULL
 
-# ggsave("../Plots/App_lowQ_fig2.png", plot = p2, width = 1920/2, height = 1107/2,
-#        scale = 2.5,
-#        units = "px")
+ggsave("../Plots/Appendix_MortFocal_LowQ.png", plot = p2, width = 1920/2, height = 1107/2,
+       scale = 2.5, dpi = 300,
+       units = "px")
 

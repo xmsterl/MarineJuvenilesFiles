@@ -4,7 +4,7 @@ source("Script_functions.R") #Load script#
 
 #Set location output files#
 Appendix_files = "../EBTfiles/Files_Appendix/"
-
+###Reduced food#####
 ####____Competitive differences subadult>adult appendix Fig 1: (Result 1): reduced food in focal nursery____#######
 #----------------------------------------------------------------------------------------#
 DataNames = c("App_compdif_Fig1_HighQ_HighR1max_subadult",
@@ -26,361 +26,23 @@ for (i in 1:length(BifPar)) {
 }
 
 rm(GetData)
-AllTimeData_R1maxHighQ = AllTimeData
+subadult_better = AllTimeData
 
-label1 = expression(paste("7.5 mg ", L^-1, day^-1))
-label2 = expression(paste("2.5 mg ", L^-1, day^-1))
-label3 = expression(paste("0.5 mg ", L^-1, day^-1))
-xlabtime = expression(atop("",atop("Time (years)","")))
+subadult_HighData <- subset(subadult_better, Bif == 0.075)
+subadult_InterData <- subset(subadult_better, Bif == 0.025)
 
-# Add column with combined Subadult and Adult biomass
-AllTimeData_R1maxHighQ$Juv_Ad_bm = AllTimeData_R1maxHighQ$Juv_bm + 
-  AllTimeData_R1maxHighQ$Ad_bm
-
-######Make plot of AllTimeData###
-SBMTimePlotR1maxHighQ = ggplot(data =  AllTimeData_R1maxHighQ,
-                               aes(x = Time/Season, y = Larv_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, Larv_bm > 0), size = 0.5, aes(colour = "aJuveniles")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, Juv_Ad_bm > 0), 
-             size = 0.5, aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
-  scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Juveniles in focal nursery", "Subadults + Adults"))+
-  ylab(expression(atop("", atop("Fish biomass",  paste("(mg ", L^-1, ")"))))) +
-  xlab(xlabtime) +
-  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar < 0.075)$MinTime) / Season, 
-             linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.75),
-        legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 300, label = 'High', size = 6) + 
-  annotate(geom = "text", x = 75, y = 300, label = 'Intermediate', size = 6) + 
-  annotate(geom = "text", x = 125, y = 300, label = 'Low', size = 6) +
-  NULL
-#SBMTimePlotR1maxHighQ
-
-
-SBMTimePlotR1maxHighQ_res = ggplot(data =  AllTimeData_R1maxHighQ,
-                                   aes(x = Time/Season, y = R1 * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, R1 > 0), size = 0.5, aes(colour = "R1")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, R2 > 0), 
-             size = 0.5, aes(colour = "R2", y = R2 * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
-  scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Focal nursery", "Adult habitat"))+
-  ylab(expression(atop("", atop("Food density",  paste("(mg ", L^-1, ")"))))) +
-  xlab(xlabtime) +
-  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar < 0.075)$MinTime) / Season, 
-             linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.75),
-        legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 125, y = 8, label = 'Starvation threshold', size = 4) + 
-  # annotate(geom = "text", x = 60, y = 100, label = label2, size = 5) + 
-  # annotate(geom = "text", x = 100, y = 100, label = label3, size = 5) +
-  geom_hline(yintercept = 5, linetype = "dashed") + 
-  scale_y_continuous(breaks = c(0, 5, 20, 40, 60), 
-                     labels = c(0, 5, 20, 40, 60)) +
-  NULL
-#SBMTimePlotR1maxHighQ_res  
-
-
-####Appendix comp dif subadult 1: Growth data figure 2####
-#First get average juvenile period#
-HighData <- subset(AllTimeData_R1maxHighQ, Bif == 0.075)
-InterData <- subset(AllTimeData_R1maxHighQ, Bif == 0.025)
-
-
-#Mgeom_point()#Mean period High#
-mean(HighData$Larv_period, na.rm = T) / 250
-mean(InterData$Larv_period, na.rm = T) / 250
-
-####Appendix comp dif subadult 1: Get pop data####
-indexstart = which(colnames(HighData) == "LCoh_1")
+indexstart = which(colnames(subadult_HighData) == "LCoh_1")
 indexend = CohNr * Varnr + indexstart - 1
-HighData_pop <- HighData[, c(1,indexstart:indexend)]
-PrepPopData(HighData_pop)
-PopCalc(HighData_pop)
 
-InterData_pop <- InterData[, c(1,indexstart:indexend)]
-PrepPopData(InterData_pop)
-PopCalc(InterData_pop)
-####
-index_mean = which.min(abs(HighData_pop$DietAge - mean(HighData$Larv_period, na.rm = T)))
-bd_mean = HighData_pop$BirthDay[index_mean]
-index_min = which.min(HighData_pop$DietAge)
-bd_min = HighData_pop$BirthDay[index_min]
-index_max = which.max(HighData_pop$DietAge)
-bd_max = HighData_pop$BirthDay[index_max]
+subadult_HighData_pop <- subadult_HighData[, c(1,indexstart:indexend)]
+PrepPopData(subadult_HighData_pop)
+PopCalc(subadult_HighData_pop)
+subadult_InterData_pop <- subadult_InterData[, c(1,indexstart:indexend)]
+PrepPopData(subadult_InterData_pop)
+PopCalc(subadult_InterData_pop)
 
 
-HighR1max_growth = ggplot(data = subset(HighData_pop,
-                                        LCoh < (100-1E-9) & BirthDay == bd_mean),
-                          aes(x = (ACoh) / 250, y = LCoh,
-                              group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(HighData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-
-#HighR1max_growth
-
-index_mean = which.min(abs(InterData_pop$DietAge - mean(InterData$Larv_period, na.rm = T)))
-bd_mean = InterData_pop$BirthDay[index_mean]
-index_min = which.min(InterData_pop$DietAge)
-bd_min = InterData_pop$BirthDay[index_min]
-index_max = which.max(InterData_pop$DietAge)
-bd_max = InterData_pop$BirthDay[index_max]
-
-InterR1max_growth =
-  ggplot(data = subset(InterData_pop,
-                       LCoh < (100-1E-9) & BirthDay == bd_mean),
-         aes(x = (ACoh) / 250, y = LCoh,
-             group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(InterData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-#InterR1max_growth
-
-####Appendix comp dif subadult 1: Combine panels figure 1######
-# Combine plots, make sure to also have growthcurves plots
-p1 = ggarrange(SBMTimePlotR1maxHighQ +
-                 theme(axis.title.x=element_blank(),
-                       axis.text.x=element_blank(),
-                       axis.ticks.x=element_blank(),
-                       plot.margin = unit(c(0,1,0,0), 'lines')),
-               HighR1max_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-                 xlim(0, 20), 
-               SBMTimePlotR1maxHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-               InterR1max_growth + xlim(0,20) + 
-                 theme(plot.margin = unit(c(0,1,0,0) , 'lines')), 
-               nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
-               align = "hv")
-
-ggsave("../Plots/App_compdif_fig1.png", plot = p1, width = 1920, height = 1107,
-       scale = 2.5,
-       units = "px")
-
-
-
-####____Competitive differences subadult>adult: (Result 2): Increasing mortality in the focal nursery____#####
-#----------------------------------------------------------------------------------------#
-# Result 2: increased mortality in focal nursery
-#----------------------------------------------------------------------------------------#
-DataNames = c("App_compdif_Fig2_HighQ_nomort_subadult",
-              "App_compdif_Fig2_HighQ_Intermort_subadult",
-              "App_compdif_Fig2_HighQ_Highmort_subadult")
-BifPar = c(0, 0.003, 0.006)
-minMaxTime <- data.frame()
-AllTimeData <- data.frame()
-
-for (i in 1:length(BifPar)) {
-  filename <- paste0(Appendix_files, DataNames[i], ".out", sep = '')
-  GetData <- read.table(filename, header = F)
-  GiveNames(GetData, maxcohorts = CohNr)
-  GetData$Bif = BifPar[i]
-  NewData = data.frame(BifPar = BifPar[i], MinTime = min(GetData$Time),
-                       MaxTime = max(GetData$Time))
-  minMaxTime = rbind(minMaxTime, NewData)
-  AllTimeData = rbind(AllTimeData, GetData)
-}
-
-rm(GetData)
-AllTimeData_HighQ = AllTimeData
-
-# Add column with combined Subadult and Adult biomass
-AllTimeData_HighQ$Juv_Ad_bm = AllTimeData_HighQ$Juv_bm + 
-  AllTimeData_HighQ$Ad_bm
-
-
-
-##Make plot mortality series High Q###
-MortTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
-                           aes(x = Time/Season, y = Larv_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, Larv_bm > 0), size = 0.5, aes(colour = "aJuveniles")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, Juv_Ad_bm > 0), 
-             size = 0.5, aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
-  scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Juveniles in focal nursery", "Subadults + Adults")) +
-  ylab(expression(atop("", atop("Fish biomass",  paste("(mg ", L^-1, ")"))))) +
-  xlab(xlabtime) +
-  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar > 0)$MinTime) / Season, 
-             linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.75),
-        legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 25, y = 330, label = 'Low', size = 6) +
-  annotate(geom = "text", x = 75, y = 330, label = "Intermediate", size = 6) + 
-  annotate(geom = "text", x = 125, y = 330, label = "High", size = 6) +
-  NULL
-#MortTimePlotHighQ
-
-
-MortTimePlotHighQ_res = ggplot(data =  AllTimeData_HighQ,
-                               aes(x = Time/Season, y = R1 * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, R1 > 0), size = 0.5, aes(colour = "aJuveniles")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, R2 > 0), 
-             size = 0.5, aes(colour = "bJuveniles", y = R2 * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
-  scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Focal nursery", "Adult habitat"))+
-  ylab(expression(atop("", atop("Food density",  paste("(mg ", L^-1, ")"))))) +
-  xlab(xlabtime) +
-  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar > 0)$MinTime) / Season, 
-             linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.80),
-        legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 125, y = 8, label = 'Starvation threshold', size = 4) +
-  # annotate(geom = "text", x = 60, y = 150, label = "0.003 / Day", size = 5) + 
-  # annotate(geom = "text", x = 100, y = 150, label = "0.006 / Day", size = 5) +
-  geom_hline(yintercept = 5, linetype = "dashed") +   
-  scale_y_continuous(breaks = c(0, 5, 25, 50, 75, 100), 
-                     labels = c(0, 5, 25, 50, 75, 100)) +
-  NULL
-#MortTimePlotHighQ_res
-
-####Appendix comp dif subadult 1: Growth data figure ####
-#First get average juvenile period#
-HighData <- subset(AllTimeData_HighQ, Bif == 0)
-InterData <- subset(AllTimeData_HighQ, Bif == 0.003)
-
-
-#Mgeom_point()#Mean period High#
-mean(HighData$Larv_period, na.rm = T) / 250
-mean(InterData$Larv_period, na.rm = T) / 250
-
-####Appendix comp dif subadult 1: Get pop data####
-indexstart = which(colnames(HighData) == "LCoh_1")
-indexend = CohNr * Varnr + indexstart - 1
-HighData_pop <- HighData[, c(1,indexstart:indexend)]
-PrepPopData(HighData_pop)
-PopCalc(HighData_pop)
-
-InterData_pop <- InterData[, c(1,indexstart:indexend)]
-PrepPopData(InterData_pop)
-PopCalc(InterData_pop)
-####
-index_mean = which.min(abs(HighData_pop$DietAge - mean(HighData$Larv_period, na.rm = T)))
-bd_mean = HighData_pop$BirthDay[index_mean]
-index_min = which.min(HighData_pop$DietAge)
-bd_min = HighData_pop$BirthDay[index_min]
-index_max = which.max(HighData_pop$DietAge)
-bd_max = HighData_pop$BirthDay[index_max]
-
-NoMortFocal_growth = ggplot(data = subset(HighData_pop,
-                                          LCoh < (100-1E-9) & BirthDay == bd_mean),
-                            aes(x = (ACoh) / 250, y = LCoh,
-                                group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(HighData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-
-#NoMortFocal_growth
-
-index_mean = which.min(abs(InterData_pop$DietAge - mean(InterData$Larv_period, na.rm = T)))
-bd_mean = InterData_pop$BirthDay[index_mean]
-index_min = which.min(InterData_pop$DietAge)
-bd_min = InterData_pop$BirthDay[index_min]
-index_max = which.max(InterData_pop$DietAge)
-bd_max = InterData_pop$BirthDay[index_max]
-
-InterMortFocal_growth =
-  ggplot(data = subset(InterData_pop,
-                       LCoh < (100-1E-9) & BirthDay == bd_mean),
-         aes(x = (ACoh) / 250, y = LCoh,
-             group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(InterData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-
-#InterMortFocal_growth
-
-####Appendix comp dif subadult 1: Combine panels figure 2######
-p2 = ggarrange(MortTimePlotHighQ +
-                 theme(axis.title.x=element_blank(),
-                       axis.text.x=element_blank(),
-                       axis.ticks.x=element_blank(),
-                       plot.margin = unit(c(0,1,0,0), 'lines')),
-               NoMortFocal_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-                 xlim(0,7), 
-               MortTimePlotHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-               InterMortFocal_growth + xlim(0,7) +
-                 theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-               nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
-               align = "hv")
-
-ggsave("../Plots/App_compdif_fig2.png", plot = p2, width = 1920, height = 1107,
-       scale = 2.5,
-       units = "px")
-
-#
-####____Competitive differences adult>subadult appendix Fig 3: (Result 1): reduced food in focal nursery____#######
-#----------------------------------------------------------------------------------------#
+####____Competitive differences subadult<adult appendix Fig 1____#####
 DataNames = c("App_compdif_Fig3_HighQ_HighR1max_adult",
               "App_compdif_Fig3_HighQ_InterR1max_adult",
               "App_compdif_Fig3_HighQ_LowR1max_adult")
@@ -400,34 +62,180 @@ for (i in 1:length(BifPar)) {
 }
 
 rm(GetData)
-AllTimeData_R1maxHighQ = AllTimeData
+adult_better = AllTimeData
 
-label1 = expression(paste("7.5 mg ", L^-1, day^-1))
-label2 = expression(paste("2.5 mg ", L^-1, day^-1))
-label3 = expression(paste("0.5 mg ", L^-1, day^-1))
-xlabtime = expression(atop("",atop("Time (years)","")))
 
-# Add column with combined adult and Adult biomass
-AllTimeData_R1maxHighQ$Juv_Ad_bm = AllTimeData_R1maxHighQ$Juv_bm + 
-  AllTimeData_R1maxHighQ$Ad_bm
+####____Competitive symmetry subadult = adult#####
+Main_files = "../EBTfiles/Files_Main/"
+DataNames = c("Fig2_HighQ_HighR1max",
+              "Fig2_HighQ_InterR1max",
+              "Fig2_HighQ_LowR1max")
+BifPar = c(0.075, 0.025, 0.005)
+minMaxTime <- data.frame()
+AllTimeData <- data.frame()
+CohNr = 21
+for (i in 1:length(BifPar)) {
+  filename <- paste0(Main_files, DataNames[i], ".out", sep = '')
+  GetData <- read.table(filename, header = F)
+  GiveNames(GetData, maxcohorts = CohNr)
+  GetData$Bif = BifPar[i]
+  NewData = data.frame(BifPar = BifPar[i], MinTime = min(GetData$Time),
+                       MaxTime = max(GetData$Time))
+  minMaxTime = rbind(minMaxTime, NewData)
+  AllTimeData = rbind(AllTimeData, GetData)
+}
 
-######Make plot of AllTimeData###
-SBMTimePlotR1maxHighQ = ggplot(data =  AllTimeData_R1maxHighQ,
-                               aes(x = Time/Season, y = Larv_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, Larv_bm > 0), size = 0.5, aes(colour = "aJuveniles")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, Juv_Ad_bm > 0), 
-             size = 0.5, aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
+rm(GetData)
+symmetry = AllTimeData
+####____Get population data for high and intermediate R1max#####
+subadult_HighData <- subset(subadult_better, Bif == 0.075)
+subadult_InterData <- subset(subadult_better, Bif == 0.025)
+adult_HighData <- subset(adult_better, Bif == 0.075)
+adult_InterData <- subset(adult_better, Bif == 0.025)
+symmetry_HighData <- subset(symmetry, Bif == 0.075)
+symmetry_InterData <- subset(symmetry, Bif == 0.025)
+
+indexstart = which(colnames(subadult_HighData) == "LCoh_1")
+indexend = CohNr * Varnr + indexstart - 1
+
+#Subadult#
+subadult_HighData_pop <- subadult_HighData[, c(1,indexstart:indexend)]
+PrepPopData(subadult_HighData_pop)
+PopCalc(subadult_HighData_pop)
+subadult_InterData_pop <- subadult_InterData[, c(1,indexstart:indexend)]
+PrepPopData(subadult_InterData_pop)
+PopCalc(subadult_InterData_pop)
+#adult
+adult_HighData_pop <- adult_HighData[, c(1,indexstart:indexend)]
+PrepPopData(adult_HighData_pop)
+PopCalc(adult_HighData_pop)
+adult_InterData_pop <- adult_InterData[, c(1,indexstart:indexend)]
+PrepPopData(adult_InterData_pop)
+PopCalc(adult_InterData_pop)
+#symmetry
+symmetry_HighData_pop <- symmetry_HighData[, c(1,indexstart:indexend)]
+PrepPopData(symmetry_HighData_pop)
+PopCalc(symmetry_HighData_pop)
+symmetry_InterData_pop <- symmetry_InterData[, c(1,indexstart:indexend)]
+PrepPopData(symmetry_InterData_pop)
+PopCalc(symmetry_InterData_pop)
+
+#Get indexes and birthdays#
+subadult_High_index = which.min(abs(subadult_HighData_pop$DietAge - mean(subadult_HighData$Larv_period, na.rm = T)))
+subadult_High_bd = subadult_HighData_pop$BirthDay[subadult_High_index]
+subadult_Inter_index = which.min(abs(subadult_InterData_pop$DietAge - mean(subadult_InterData$Larv_period, na.rm = T)))
+subadult_Inter_bd = subadult_InterData_pop$BirthDay[subadult_Inter_index]
+
+adult_High_index = which.min(abs(adult_HighData_pop$DietAge - mean(adult_HighData$Larv_period, na.rm = T)))
+adult_High_bd = adult_HighData_pop$BirthDay[adult_High_index]
+adult_Inter_index = which.min(abs(adult_InterData_pop$DietAge - mean(adult_InterData$Larv_period, na.rm = T)))
+adult_Inter_bd = adult_InterData_pop$BirthDay[adult_Inter_index]
+
+symmetry_High_index = which.min(abs(symmetry_HighData_pop$DietAge - mean(symmetry_HighData$Larv_period, na.rm = T)))
+symmetry_High_bd = symmetry_HighData_pop$BirthDay[symmetry_High_index]
+symmetry_Inter_index = which.min(abs(symmetry_InterData_pop$DietAge - mean(symmetry_InterData$Larv_period, na.rm = T)))
+symmetry_Inter_bd = symmetry_InterData_pop$BirthDay[symmetry_Inter_index]
+
+
+#combine data#
+Pop_subadult_high <- subset(subadult_HighData_pop,
+                            LCoh < (100-1E-9) & BirthDay == subadult_High_bd)
+Pop_subadult_high$food <- 'High food'
+Pop_subadult_high$comp <- 'Subadults competitively superior'
+
+Pop_subadult_inter <- subset(subadult_InterData_pop,
+                            LCoh < (100-1E-9) & BirthDay == subadult_Inter_bd)
+Pop_subadult_inter$food <- 'Intermediate food'
+Pop_subadult_inter$comp <- 'Subadults competitively superior'
+
+Pop_adult_high <- subset(adult_HighData_pop,
+                         LCoh < (100-1E-9) & BirthDay == adult_High_bd)
+Pop_adult_high$food <- 'High food'
+Pop_adult_high$comp <- 'Adults competitively superior'
+
+Pop_adult_inter <- subset(adult_InterData_pop,
+                          LCoh < (100-1E-9) & BirthDay == adult_Inter_bd)
+Pop_adult_inter$food <- 'Intermediate food'
+Pop_adult_inter$comp <- 'Adults competitively superior'
+
+Pop_symmetry_high <- subset(symmetry_HighData_pop,
+                            LCoh < (100-1E-9) & BirthDay == symmetry_High_bd)
+Pop_symmetry_high$food <- 'High food'
+Pop_symmetry_high$comp <- 'Symmetric competition'
+
+Pop_symmetry_inter <- subset(symmetry_InterData_pop,
+                             LCoh < (100-1E-9) & BirthDay == symmetry_Inter_bd)
+Pop_symmetry_inter$food <- 'Intermediate food'
+Pop_symmetry_inter$comp <- 'Symmetric competition'
+
+AllPop <- rbind(Pop_symmetry_high, Pop_symmetry_inter,
+                Pop_adult_high, Pop_adult_inter,
+                Pop_subadult_high, Pop_subadult_inter)
+AllPop$comp <- as.factor(AllPop$comp)
+AllPop$comp <- relevel(AllPop$comp, "Subadults competitively superior")
+AllPop$comp <- relevel(AllPop$comp, "Symmetric competition")
+AllPop$comp <- relevel(AllPop$comp, "Adults competitively superior")
+
+
+GrowthCurves <- ggplot(data = AllPop,
+                      aes(x = (ACoh) / 250, y = LCoh)) +
+  geom_path(linewidth = 2, aes(colour = comp)) +
+  
+  facet_grid(.~food) +
+  xlab(expression(atop("", atop("Time (years)", "")))) +
+  ylab("Size (gram)") +
+  scale_color_manual(values = c("darkgreen", "grey", "darkorange")) +
+  theme(legend.position = 'right',
+        legend.title = element_blank(),
+        axis.title.y = element_text(size = 14, colour = 'black'),
+        axis.title.x = element_text(size = 20, colour = 'black'),
+        axis.text=element_text(size = 14, colour = 'black'),
+        plot.margin = margin(10, 5, 0, 5.5, "pt"),
+        legend.background = element_blank(), 
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  NULL
+#GrowthCurves
+
+
+
+
+
+
+
+
+###Plot time #####
+subadult_better$Juv_Ad_bm = subadult_better$Juv_bm + 
+  subadult_better$Ad_bm
+adult_better$Juv_Ad_bm = adult_better$Juv_bm + 
+  adult_better$Ad_bm
+symmetry$Juv_Ad_bm = symmetry$Juv_bm + 
+  symmetry$Ad_bm
+subadult_better$comp = 'Subadults superior'
+adult_better$comp = 'Adults superior'
+symmetry$comp = 'Symmetric'
+timedata_comp <- rbind(subadult_better, adult_better, symmetry)
+timedata_comp$comp <- as.factor(timedata_comp$comp)
+timedata_comp$comp <- relevel(timedata_comp$comp, "Subadults superior")
+timedata_comp$comp <- relevel(timedata_comp$comp, "Symmetric")
+timedata_comp$comp <- relevel(timedata_comp$comp, "Adults superior")
+
+
+
+TimePlot_comp <- ggplot(data =  timedata_comp,
+       aes(x = Time/Season, y = Larv_bm * 1000)) +  
+  geom_path(aes(colour = "aJuveniles")) +
+  geom_path(aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) + 
   scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Juveniles in focal nursery", "adults + Adults"))+
+                     labels = c("Juveniles in focal nursery", "Subadults + Adults"))+
+  theme_bw() +
+  facet_grid(.~comp)+ 
   ylab(expression(atop("", atop("Fish biomass",  paste("(mg ", L^-1, ")"))))) +
   xlab(xlabtime) +
   guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
   geom_vline(xintercept = (subset(minMaxTime, BifPar < 0.075)$MinTime) / Season, 
              linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.75),
+  theme(legend.position = 'none',#,c(0.83, 0.75),
         legend.background = element_blank(),
         legend.text = element_text(size=11),
         axis.text=element_text(size=14),
@@ -436,150 +244,30 @@ SBMTimePlotR1maxHighQ = ggplot(data =  AllTimeData_R1maxHighQ,
   annotate(geom = "text", x = 75, y = 300, label = 'Intermediate', size = 6) + 
   annotate(geom = "text", x = 125, y = 300, label = 'Low', size = 6) +
   NULL
-#SBMTimePlotR1maxHighQ
+#TimePlot_comp
+#GrowthCurves
 
+Appendix_competition_food <- ggarrange(
+  TimePlot_comp + theme(plot.margin = unit(c(0,0,0,0), 'lines')), 
+  GrowthCurves + theme(plot.margin = unit(c(0,0,0,1.5), 'lines')),
+  ncol = 1)
+Appendix_competition_food
 
-SBMTimePlotR1maxHighQ_res = ggplot(data =  AllTimeData_R1maxHighQ,
-                                   aes(x = Time/Season, y = R1 * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, R1 > 0), size = 0.5, aes(colour = "R1")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_R1maxHighQ, R2 > 0), 
-             size = 0.5, aes(colour = "R2", y = R2 * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
-  scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Focal nursery", "Adult habitat"))+
-  ylab(expression(atop("", atop("Food density",  paste("(mg ", L^-1, ")"))))) +
-  xlab(xlabtime) +
-  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar < 0.075)$MinTime) / Season, 
-             linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.75),
-        legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 125, y = 8, label = 'Starvation threshold', size = 4) + 
-  # annotate(geom = "text", x = 60, y = 100, label = label2, size = 5) + 
-  # annotate(geom = "text", x = 100, y = 100, label = label3, size = 5) +
-  geom_hline(yintercept = 5, linetype = "dashed") + 
-  scale_y_continuous(breaks = c(0, 5, 20, 40, 60), 
-                     labels = c(0, 5, 20, 40, 60)) +
-  NULL
-#SBMTimePlotR1maxHighQ_res  
-
-
-####Appendix comp dif adult 1: Growth data figure 3####
-#First get average juvenile period#
-HighData <- subset(AllTimeData_R1maxHighQ, Bif == 0.075)
-InterData <- subset(AllTimeData_R1maxHighQ, Bif == 0.025)
-
-
-#Mgeom_point()#Mean period High#
-mean(HighData$Larv_period, na.rm = T) / 250
-mean(InterData$Larv_period, na.rm = T) / 250
-
-####Appendix comp dif adult 1: Get pop data####
-indexstart = which(colnames(HighData) == "LCoh_1")
-indexend = CohNr * Varnr + indexstart - 1
-HighData_pop <- HighData[, c(1,indexstart:indexend)]
-PrepPopData(HighData_pop)
-PopCalc(HighData_pop)
-
-InterData_pop <- InterData[, c(1,indexstart:indexend)]
-PrepPopData(InterData_pop)
-PopCalc(InterData_pop)
-####
-index_mean = which.min(abs(HighData_pop$DietAge - mean(HighData$Larv_period, na.rm = T)))
-bd_mean = HighData_pop$BirthDay[index_mean]
-index_min = which.min(HighData_pop$DietAge)
-bd_min = HighData_pop$BirthDay[index_min]
-index_max = which.max(HighData_pop$DietAge)
-bd_max = HighData_pop$BirthDay[index_max]
-
-
-HighR1max_growth = ggplot(data = subset(HighData_pop,
-                                        LCoh < (100-1E-9) & BirthDay == bd_mean),
-                          aes(x = (ACoh) / 250, y = LCoh,
-                              group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(HighData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-
-#HighR1max_growth
-
-index_mean = which.min(abs(InterData_pop$DietAge - mean(InterData$Larv_period, na.rm = T)))
-bd_mean = InterData_pop$BirthDay[index_mean]
-index_min = which.min(InterData_pop$DietAge)
-bd_min = InterData_pop$BirthDay[index_min]
-index_max = which.max(InterData_pop$DietAge)
-bd_max = InterData_pop$BirthDay[index_max]
-
-InterR1max_growth =
-  ggplot(data = subset(InterData_pop,
-                       LCoh < (100-1E-9) & BirthDay == bd_mean),
-         aes(x = (ACoh) / 250, y = LCoh,
-             group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(InterData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-#InterR1max_growth
-
-####Appendix comp dif adult 1: Combine panels figure 3######
-# Combine plots, make sure to also have growthcurves plots
-p1 = ggarrange(SBMTimePlotR1maxHighQ +
-                 theme(axis.title.x=element_blank(),
-                       axis.text.x=element_blank(),
-                       axis.ticks.x=element_blank(),
-                       plot.margin = unit(c(0,1,0,0), 'lines')),
-               HighR1max_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-                 xlim(0, 20), 
-               SBMTimePlotR1maxHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-               InterR1max_growth + xlim(0,20) + 
-                 theme(plot.margin = unit(c(0,1,0,0) , 'lines')), 
-               nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
-               align = "hv")
-p1
-
-ggsave("../Plots/App_compdif_fig3.png", plot = p1, width = 1920, height = 1107,
-       scale = 2.5,
+ggsave("../Plots/App_compdif_fig1New.png", plot = Appendix_competition_food, width = 1920, height = 1107,
+       scale = 2.5, dpi = 300,
        units = "px")
 
-
-
-####____Competitive differences adult>subadult: appendix Fig 4: (Result 2): Increasing mortality in the focal nursery____#####
+####____________________________________________________________________####
+###Increased mortality nursery#####
+####____Competitive differences subadult>adult appendix Fig 2: (Result 2): Increased mort in focal nursery____#######
 #----------------------------------------------------------------------------------------#
-# Result 2: increased mortality in focal nursery
-#----------------------------------------------------------------------------------------#
-DataNames = c("App_compdif_Fig4_HighQ_nomort_adult",
-              "App_compdif_Fig4_HighQ_Intermort_adult",
-              "App_compdif_Fig4_HighQ_Highmort_adult")
+DataNames = c("App_compdif_Fig2_HighQ_nomort_subadult",
+              "App_compdif_Fig2_HighQ_Intermort_subadult",
+              "App_compdif_Fig2_HighQ_Highmort_subadult")
 BifPar = c(0, 0.003, 0.006)
 minMaxTime <- data.frame()
 AllTimeData <- data.frame()
-
+CohNr = 21
 for (i in 1:length(BifPar)) {
   filename <- paste0(Appendix_files, DataNames[i], ".out", sep = '')
   GetData <- read.table(filename, header = F)
@@ -592,31 +280,211 @@ for (i in 1:length(BifPar)) {
 }
 
 rm(GetData)
-AllTimeData_HighQ = AllTimeData
+subadult_better = AllTimeData
 
-# Add column with combined adult and Adult biomass
-AllTimeData_HighQ$Juv_Ad_bm = AllTimeData_HighQ$Juv_bm + 
-  AllTimeData_HighQ$Ad_bm
+subadult_NoMortData <- subset(subadult_better, Bif == 0)
+subadult_InterMortData <- subset(subadult_better, Bif == 0.003)
+
+indexstart = which(colnames(subadult_NoMortData) == "LCoh_1")
+indexend = CohNr * Varnr + indexstart - 1
+
+subadult_NoMortData_pop <- subadult_NoMortData[, c(1,indexstart:indexend)]
+PrepPopData(subadult_NoMortData_pop)
+PopCalc(subadult_NoMortData_pop)
+subadult_InterMortData_pop <- subadult_InterMortData[, c(1,indexstart:indexend)]
+PrepPopData(subadult_InterMortData_pop)
+PopCalc(subadult_InterMortData_pop)
+
+
+####____Competitive differences subadult<adult appendix Fig 2____#####
+DataNames = c("App_compdif_Fig4_HighQ_nomort_adult",
+              "App_compdif_Fig4_HighQ_Intermort_adult",
+              "App_compdif_Fig4_HighQ_Highmort_adult")
+BifPar = c(0, 0.003, 0.006)
+minMaxTime <- data.frame()
+AllTimeData <- data.frame()
+CohNr = 21
+for (i in 1:length(BifPar)) {
+  filename <- paste0(Appendix_files, DataNames[i], ".out", sep = '')
+  GetData <- read.table(filename, header = F)
+  GiveNames(GetData, maxcohorts = CohNr)
+  GetData$Bif = BifPar[i]
+  NewData = data.frame(BifPar = BifPar[i], MinTime = min(GetData$Time),
+                       MaxTime = max(GetData$Time))
+  minMaxTime = rbind(minMaxTime, NewData)
+  AllTimeData = rbind(AllTimeData, GetData)
+}
+
+rm(GetData)
+adult_better = AllTimeData
+
+adult_NoMortData <- subset(adult_better, Bif == 0)
+adult_InterMortData <- subset(adult_better, Bif == 0.003)
+
+indexstart = which(colnames(adult_NoMortData) == "LCoh_1")
+indexend = CohNr * Varnr + indexstart - 1
+
+adult_NoMortData_pop <- adult_NoMortData[, c(1,indexstart:indexend)]
+PrepPopData(adult_NoMortData_pop)
+PopCalc(adult_NoMortData_pop)
+adult_InterMortData_pop <- adult_InterMortData[, c(1,indexstart:indexend)]
+PrepPopData(adult_InterMortData_pop)
+PopCalc(adult_InterMortData_pop)
+
+
+####____Competitive symmetry subadult = adult#####
+Main_files = "../EBTfiles/Files_Main/"
+DataNames = c("Fig3_HighQ_nomort",
+              "Fig3_HighQ_Intermort",
+              "Fig3_HighQ_Highmort")
+BifPar = c(0, 0.003, 0.006)
+minMaxTime <- data.frame()
+AllTimeData <- data.frame()
+CohNr = 21
+for (i in 1:length(BifPar)) {
+  filename <- paste0(Main_files, DataNames[i], ".out", sep = '')
+  GetData <- read.table(filename, header = F)
+  GiveNames(GetData, maxcohorts = CohNr)
+  GetData$Bif = BifPar[i]
+  NewData = data.frame(BifPar = BifPar[i], MinTime = min(GetData$Time),
+                       MaxTime = max(GetData$Time))
+  minMaxTime = rbind(minMaxTime, NewData)
+  AllTimeData = rbind(AllTimeData, GetData)
+}
+
+rm(GetData)
+symmetry = AllTimeData
+
+symmetry_NoMortData <- subset(symmetry, Bif == 0)
+symmetry_InterMortData <- subset(symmetry, Bif == 0.003)
+
+indexstart = which(colnames(symmetry_NoMortData) == "LCoh_1")
+indexend = CohNr * Varnr + indexstart - 1
+
+symmetry_NoMortData_pop <- symmetry_NoMortData[, c(1, indexstart:indexend)]
+PrepPopData(symmetry_NoMortData_pop)
+PopCalc(symmetry_NoMortData_pop)
+symmetry_InterMortData_pop <- symmetry_InterMortData[, c(1, indexstart:indexend)]
+PrepPopData(symmetry_InterMortData_pop)
+PopCalc(symmetry_InterMortData_pop)
+
+
+####____Get population data for high and intermediate R1max#####
+
+
+#Get indexes and birthdays#
+subadult_NoMort_index = which.min(abs(subadult_NoMortData_pop$DietAge - mean(subadult_NoMortData$Larv_period, na.rm = T)))
+subadult_NoMort_bd = subadult_NoMortData_pop$BirthDay[subadult_NoMort_index]
+subadult_Inter_index = which.min(abs(subadult_InterMortData_pop$DietAge - mean(subadult_InterMortData$Larv_period, na.rm = T)))
+subadult_Inter_bd = subadult_InterMortData_pop$BirthDay[subadult_Inter_index]
+
+adult_NoMort_index = which.min(abs(adult_NoMortData_pop$DietAge - mean(adult_NoMortData$Larv_period, na.rm = T)))
+adult_NoMort_bd = adult_NoMortData_pop$BirthDay[adult_NoMort_index]
+adult_Inter_index = which.min(abs(adult_InterMortData_pop$DietAge - mean(adult_InterMortData$Larv_period, na.rm = T)))
+adult_Inter_bd = adult_InterMortData_pop$BirthDay[adult_Inter_index]
+
+symmetry_NoMort_index = which.min(abs(symmetry_NoMortData_pop$DietAge - mean(symmetry_NoMortData$Larv_period, na.rm = T)))
+symmetry_NoMort_bd = symmetry_NoMortData_pop$BirthDay[symmetry_NoMort_index]
+symmetry_Inter_index = which.min(abs(symmetry_InterMortData_pop$DietAge - mean(symmetry_InterMortData$Larv_period, na.rm = T)))
+symmetry_Inter_bd = symmetry_InterMortData_pop$BirthDay[symmetry_Inter_index]
+
+
+#combine data#
+Pop_subadult_nomort <- subset(subadult_NoMortData_pop,
+                              LCoh < (100-1E-9) & BirthDay == subadult_NoMort_bd)
+Pop_subadult_nomort$mort <- 'Low'
+Pop_subadult_nomort$comp <- 'Subadults competitively superior'
+
+Pop_subadult_inter <- subset(subadult_InterMortData_pop,
+                             LCoh < (100-1E-9) & BirthDay == subadult_Inter_bd)
+Pop_subadult_inter$mort <- 'Intermediate'
+Pop_subadult_inter$comp <- 'Subadults competitively superior'
+
+Pop_adult_nomort <- subset(adult_NoMortData_pop,
+                           LCoh < (100-1E-9) & BirthDay == adult_NoMort_bd)
+Pop_adult_nomort$mort <- 'Low'
+Pop_adult_nomort$comp <- 'Adults competitively superior'
+
+Pop_adult_inter <- subset(adult_InterMortData_pop,
+                          LCoh < (100-1E-9) & BirthDay == adult_Inter_bd)
+Pop_adult_inter$mort <- 'Intermediate'
+Pop_adult_inter$comp <- 'Adults competitively superior'
+
+Pop_symmetry_nomort <- subset(symmetry_NoMortData_pop,
+                              LCoh < (100-1E-9) & BirthDay == symmetry_NoMort_bd)
+Pop_symmetry_nomort$mort <- 'Low'
+Pop_symmetry_nomort$comp <- 'Symmetric competition'
+
+Pop_symmetry_inter <- subset(symmetry_InterMortData_pop,
+                             LCoh < (100-1E-9) & BirthDay == symmetry_Inter_bd)
+Pop_symmetry_inter$mort <- 'Intermediate'
+Pop_symmetry_inter$comp <- 'Symmetric competition'
+
+AllPop <- rbind(Pop_symmetry_nomort, Pop_symmetry_inter,
+                Pop_adult_nomort, Pop_adult_inter,
+                Pop_subadult_nomort, Pop_subadult_inter)
+AllPop$comp <- as.factor(AllPop$comp)
+AllPop$comp <- relevel(AllPop$comp, "Subadults competitively superior")
+AllPop$comp <- relevel(AllPop$comp, "Symmetric competition")
+AllPop$comp <- relevel(AllPop$comp, "Adults competitively superior")
+AllPop$mort <- as.factor(AllPop$mort)
+AllPop$mort <- relevel(AllPop$mort, "Low")
+
+
+GrowthCurves <- ggplot(data = AllPop,
+                       aes(x = (ACoh) / 250, y = LCoh)) +
+  geom_path(linewidth = 2, aes(colour = comp)) +
+  facet_grid(.~mort) +
+  xlab(expression(atop("", atop("Time (years)", "")))) +
+  ylab("Size (gram)") +
+  scale_color_manual(values = c("darkgreen", "grey", "darkorange")) +
+  theme(legend.position = 'right',
+        legend.title = element_blank(),
+        axis.title.y = element_text(size = 14, colour = 'black'),
+        axis.title.x = element_text(size = 20, colour = 'black'),
+        axis.text=element_text(size = 14, colour = 'black'),
+        plot.margin = margin(10, 5, 0, 5.5, "pt"),
+        legend.background = element_blank(), 
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  NULL
+#GrowthCurves
 
 
 
-##Make plot mortality series High Q###
-MortTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
-                           aes(x = Time/Season, y = Larv_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, Larv_bm > 0), size = 0.5, aes(colour = "aJuveniles")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, Juv_Ad_bm > 0), 
-             size = 0.5, aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
+
+###Plot time #####
+subadult_better$Juv_Ad_bm = subadult_better$Juv_bm + 
+  subadult_better$Ad_bm
+adult_better$Juv_Ad_bm = adult_better$Juv_bm + 
+  adult_better$Ad_bm
+symmetry$Juv_Ad_bm = symmetry$Juv_bm + 
+  symmetry$Ad_bm
+subadult_better$comp = 'Subadults superior'
+adult_better$comp = 'Adults superior'
+symmetry$comp = 'Symmetric'
+timedata_comp <- rbind(subadult_better, adult_better, symmetry)
+timedata_comp$comp <- as.factor(timedata_comp$comp)
+timedata_comp$comp <- relevel(timedata_comp$comp, "Subadults superior")
+timedata_comp$comp <- relevel(timedata_comp$comp, "Symmetric")
+timedata_comp$comp <- relevel(timedata_comp$comp, "Adults superior")
+
+
+
+TimePlot_comp <- ggplot(data =  timedata_comp,
+                        aes(x = Time/Season, y = Larv_bm * 1000)) +  
+  geom_path(aes(colour = "aJuveniles")) +
+  geom_path(aes(colour = "bJuveniles", y = Juv_Ad_bm * 1000)) + 
   scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Juveniles in focal nursery", "adults + Adults")) +
+                     labels = c("Juveniles in focal nursery", "Subadults + Adults"))+
+  theme_bw() +
+  facet_grid(.~comp)+ 
   ylab(expression(atop("", atop("Fish biomass",  paste("(mg ", L^-1, ")"))))) +
   xlab(xlabtime) +
   guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar > 0)$MinTime) / Season, 
+  geom_vline(xintercept = (subset(minMaxTime, BifPar < 0.075)$MinTime) / Season, 
              linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.75),
+  theme(legend.position = 'none',#,c(0.83, 0.75),
         legend.background = element_blank(),
         legend.text = element_text(size=11),
         axis.text=element_text(size=14),
@@ -625,132 +493,15 @@ MortTimePlotHighQ = ggplot(data =  AllTimeData_HighQ,
   annotate(geom = "text", x = 75, y = 330, label = "Intermediate", size = 6) + 
   annotate(geom = "text", x = 125, y = 330, label = "High", size = 6) +
   NULL
-#MortTimePlotHighQ
+#TimePlot_comp
+#GrowthCurves
 
+Appendix_competition_mort <- ggarrange(
+  TimePlot_comp + theme(plot.margin = unit(c(0,0,0,0), 'lines')), 
+  GrowthCurves + theme(plot.margin = unit(c(0,0,0,1.5), 'lines')),
+  ncol = 1)
+Appendix_competition_mort
 
-MortTimePlotHighQ_res = ggplot(data =  AllTimeData_HighQ,
-                               aes(x = Time/Season, y = R1 * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, R1 > 0), size = 0.5, aes(colour = "aJuveniles")) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Est_bm > 0), size = 0.1, aes(colour = "aAJuveniles", y = Est_bm * 1000)) +
-  geom_point(data = subset(AllTimeData_HighQ, R2 > 0), 
-             size = 0.5, aes(colour = "bJuveniles", y = R2 * 1000)) +
-  #geom_point(data = subset(AllTimeData_R1maxHighQ, Ad_bm > 0), size = 0.1, aes(colour = "cAdults", y = Ad_bm * 1000)) + 
-  layout + 
-  scale_color_manual(values = c("#4B0055", "#36E9A7"),
-                     labels = c("Focal nursery", "Adult habitat"))+
-  ylab(expression(atop("", atop("Food density",  paste("(mg ", L^-1, ")"))))) +
-  xlab(xlabtime) +
-  guides(color = guide_legend(byrow = TRUE,  override.aes = list(size = 3))) + 
-  geom_vline(xintercept = (subset(minMaxTime, BifPar > 0)$MinTime) / Season, 
-             linetype = 'dashed') +
-  theme(legend.position = c(0.83, 0.80),
-        legend.background = element_blank(),
-        legend.text = element_text(size=11),
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=20)) +
-  annotate(geom = "text", x = 125, y = 8, label = 'Starvation threshold', size = 4) +
-  # annotate(geom = "text", x = 60, y = 150, label = "0.003 / Day", size = 5) + 
-  # annotate(geom = "text", x = 100, y = 150, label = "0.006 / Day", size = 5) +
-  geom_hline(yintercept = 5, linetype = "dashed") +   
-  scale_y_continuous(breaks = c(0, 5, 25, 50, 75, 100), 
-                     labels = c(0, 5, 25, 50, 75, 100)) +
-  NULL
-#MortTimePlotHighQ_res
-
-####Appendix comp dif adult 1: Growth data figure ####
-#First get average juvenile period#
-HighData <- subset(AllTimeData_HighQ, Bif == 0)
-InterData <- subset(AllTimeData_HighQ, Bif == 0.003)
-
-
-#Mgeom_point()#Mean period High#
-mean(HighData$Larv_period, na.rm = T) / 250
-mean(InterData$Larv_period, na.rm = T) / 250
-
-####Appendix comp dif adult 1: Get pop data####
-indexstart = which(colnames(HighData) == "LCoh_1")
-indexend = CohNr * Varnr + indexstart - 1
-HighData_pop <- HighData[, c(1,indexstart:indexend)]
-PrepPopData(HighData_pop)
-PopCalc(HighData_pop)
-
-InterData_pop <- InterData[, c(1,indexstart:indexend)]
-PrepPopData(InterData_pop)
-PopCalc(InterData_pop)
-####
-index_mean = which.min(abs(HighData_pop$DietAge - mean(HighData$Larv_period, na.rm = T)))
-bd_mean = HighData_pop$BirthDay[index_mean]
-index_min = which.min(HighData_pop$DietAge)
-bd_min = HighData_pop$BirthDay[index_min]
-index_max = which.max(HighData_pop$DietAge)
-bd_max = HighData_pop$BirthDay[index_max]
-
-NoMortFocal_growth = ggplot(data = subset(HighData_pop,
-                                          LCoh < (100-1E-9) & BirthDay == bd_mean),
-                            aes(x = (ACoh) / 250, y = LCoh,
-                                group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(HighData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-
-#NoMortFocal_growth
-
-index_mean = which.min(abs(InterData_pop$DietAge - mean(InterData$Larv_period, na.rm = T)))
-bd_mean = InterData_pop$BirthDay[index_mean]
-index_min = which.min(InterData_pop$DietAge)
-bd_min = InterData_pop$BirthDay[index_min]
-index_max = which.max(InterData_pop$DietAge)
-bd_max = InterData_pop$BirthDay[index_max]
-
-InterMortFocal_growth =
-  ggplot(data = subset(InterData_pop,
-                       LCoh < (100-1E-9) & BirthDay == bd_mean),
-         aes(x = (ACoh) / 250, y = LCoh,
-             group = BirthDay)) +
-  geom_path(alpha = .5, size = 2) +
-  geom_path(data = subset(InterData_pop,
-                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
-  xlab(expression(atop("", atop("Time (years)", "")))) +
-  ylab("Size (gram)") +
-  theme(legend.position = 'none',
-        axis.title.y = element_text(size = 14, colour = 'black'),
-        axis.title.x = element_text(size = 20, colour = 'black'),
-        axis.text=element_text(size=14, colour = 'black'),
-        plot.margin = margin(10, 5, 0, 5.5, "pt"),
-        legend.background = element_blank(), 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  NULL
-
-#InterMortFocal_growth
-
-####Appendix comp dif adult 1: Combine panels figure 4######
-p2 = ggarrange(MortTimePlotHighQ +
-                 theme(axis.title.x=element_blank(),
-                       axis.text.x=element_blank(),
-                       axis.ticks.x=element_blank(),
-                       plot.margin = unit(c(0,1,0,0), 'lines')),
-               NoMortFocal_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-                 xlim(0,7), 
-               MortTimePlotHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-               InterMortFocal_growth + xlim(0,7) +
-                 theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-               nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
-               align = "hv")
-
-ggsave("../Plots/App_compdif_fig4.png", plot = p2, width = 1920, height = 1107,
-       scale = 2.5,
+ggsave("../Plots/App_compdif_fig2New.png", plot = Appendix_competition_mort, width = 1920, height = 1107,
+       scale = 2.5, dpi = 300,
        units = "px")
-
-#

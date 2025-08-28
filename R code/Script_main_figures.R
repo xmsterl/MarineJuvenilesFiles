@@ -6,8 +6,97 @@ source("Script_functions.R") #Load script#
 Main_files = "../EBTfiles/Files_Main/"
 Appendix_files = "../EBTfiles/Files_Appendix/"
 
+#setwd('U:\Manuscript_MJ\NewFiles_Hanna')
+
+CohNr = 21
+xlabtime = expression(atop("",atop("Time (years)","")))
+library(ggpubr)
+
+#Set locations#
+#FigMain_loc = "U:\\Manuscript\\Figures_main"
+#FigAppendix_loc = "Figures/Figures_appendx"
+#Bif_loc = "D:\\Internship\\Manuscript\\Files_Hanna\\EBTRuns\\Bifurcations\\"
+Time_loc = "../EBTfiles/Files_Main/"
+#
+####Better/simpler functions for getting pop data#####
+PrepPopData <- function(DataPop,
+                        maxcohorts = 21,
+                        var = 3,
+                        name1 = "LCoh_",
+                        name2 = "NCoh_",
+                        name3 = "BCoh_") {
+  name = deparse(substitute(DataPop))
+  print(name)
+  AllData <- DataPop
+  AllData[AllData > 10^10] <- NA
+  
+  for (i in 1:maxcohorts) {
+    # Create the column names
+    NCoh_name <- paste0(name2, i)
+    BirthDay_name <- paste0("BirthDay_", i)
+    
+    # Find the position of NCoh_i column
+    pos <- which(names(AllData) == NCoh_name)
+    
+    # Add the new column after NCoh_i
+    AllData <- add_column(AllData, !!BirthDay_name := NA, .after = pos)
+  }
+  
+  for (i in 1:maxcohorts) {
+    LCoh_name <- paste0(name1, i)
+    BirthDay_name <- paste0("BirthDay_", i)
+    
+    # Identify rows where ACoh_name is NA or 0
+    na_indices <- is.na(AllData[, LCoh_name])
+    zero_indices <- AllData[, LCoh_name] == 0.351
+    zero_indices[is.na(zero_indices)] = FALSE 
+    # Assign NA or Time value based on conditions
+    AllData[zero_indices, BirthDay_name] <- AllData[zero_indices, "Time"]
+    AllData <- AllData %>% fill(BirthDay_name)
+  }
+  
+  # Create a vector of column names
+  cols <- c(paste0(c(name1, name2, name3, "BirthDay_"), rep(1:maxcohorts, each = var+1)))
+  
+  # Reshape the data
+  PopData_long <- AllData %>%
+    pivot_longer(cols = all_of(cols), names_to = c(".value", "Group"), names_pattern = "(.*)_(.*)")
+  PopData_long$Group = NULL
+  PopData_long <- na.omit(PopData_long)
+  assign(name, PopData_long, .GlobalEnv)
+}
+
+PopCalc <- function(PopData) {
+  name = deparse(substitute(PopData))
+  ###pars###
+  Size_dietswitch = 100
+  Size_mat = 200
+  #####
+  popdata <- data.frame()
+  poptemp <- PopData 
+  bd <- unique(poptemp$BirthDay)
+  for(i in 1:length(bd)){
+    subdata = subset(poptemp, BirthDay == bd[i])
+    subdata$ACoh = seq(0,(nrow(subdata)-1))
+    subdata$Day = subdata$Time %% Season
+    subdata$Year = subdata$Time %/% Season
+    subdata$LifeStage = "Juvenile"
+    subdata$LifeStage[subdata$LCoh >= Size_dietswitch] = "Subadult"
+    subdata$LifeStage[subdata$LCoh >= Size_mat] = "Adult"
+    subdata$DietAge = NA
+    subdata$MaxAge <- max(subdata$ACoh)
+    if(max(subdata$LCoh >= Size_dietswitch)) {
+      index <- which.min(abs(subdata$LCoh - Size_dietswitch))
+      subdata$DietAge = subdata$ACoh[index]
+    }
+    popdata = rbind(popdata, subdata)
+  }
+  assign(name, popdata, .GlobalEnv)   
+}
+
+
 #----------------------------------------------------------------------------------------#
-####____Fig2: (Result 1): reduced food in focal nursery____#######
+####Fig2: (Result 1): reduced food in focal nursery#######
 #----------------------------------------------------------------------------------------#
 DataNames = c("Fig2_HighQ_HighR1max",
               "Fig2_HighQ_InterR1max",
@@ -17,7 +106,7 @@ minMaxTime <- data.frame()
 AllTimeData <- data.frame()
 CohNr = 21
 for (i in 1:length(BifPar)) {
-  filename <- paste0(Main_files, DataNames[i], ".out", sep = '')
+  filename <- paste0(Time_loc, DataNames[i], ".out", sep = '')
   GetData <- read.table(filename, header = F)
   GiveNames(GetData, maxcohorts = CohNr)
   GetData$Bif = BifPar[i]
@@ -100,8 +189,11 @@ SBMTimePlotR1maxHighQ_res = ggplot(data =  AllTimeData_R1maxHighQ,
 ####Fig2: Growth data figure 2####
 #First get average juvenile period#
 HighData <- subset(AllTimeData_R1maxHighQ, Bif == 0.075)
-InterData <- subset(AllTimeData_R1maxHighQ, Bif == 0.025)#read.table("Fig2_HighQ_InterR1maxLong.out", header = F)
+InterData <- read.table("../EBTfiles/Files_Main/Fig2_HighQ_InterR1maxLong.out", header = F)
+GiveNames(InterData, maxcohorts = CohNr)
 
+ggplot(data = subset(InterData, Time < 10000), aes(x = Time, y = Larv_period)) +
+  geom_point()
 
 #Mgeom_point()#Mean period High#
 mean(HighData$Larv_period, na.rm = T) / 250
@@ -131,8 +223,8 @@ HighR1max_growth = ggplot(data = subset(HighData_pop,
                           aes(x = (ACoh) / 250, y = LCoh,
                               group = BirthDay)) +
   geom_path(alpha = .5, size = 2) +
-    geom_path(data = subset(HighData_pop,
-                            LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
+  geom_path(data = subset(HighData_pop,
+                          LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
   xlab(expression(atop("", atop("Time (years)", "")))) +
   ylab("Size (gram)") +
   theme(legend.position = 'none',
@@ -175,29 +267,27 @@ InterR1max_growth =
   NULL
 #InterR1max_growth
 
-####Fig2: Combine panels figure 2######
+####Fig3: Combine panels figure 2######
 # Combine plots, make sure to also have growthcurves plots
-p1 = ggarrange(SBMTimePlotR1maxHighQ +
-            theme(axis.title.x=element_blank(),
-                  axis.text.x=element_blank(),
-                  axis.ticks.x=element_blank(),
-                  plot.margin = unit(c(0,1,0,0), 'lines')),
-          HighR1max_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
-            xlim(0, 20), 
-          SBMTimePlotR1maxHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
-          InterR1max_growth + xlim(0,20) + 
-            theme(plot.margin = unit(c(0,1,0,0) , 'lines')), 
-          nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
-          align = "hv")
+p1 <- ggarrange(SBMTimePlotR1maxHighQ +
+                  theme(axis.title.x=element_blank(),
+                        axis.text.x=element_blank(),
+                        axis.ticks.x=element_blank(),
+                        plot.margin = unit(c(0,1,0,0), 'lines')),
+                HighR1max_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
+                  xlim(0, 20), 
+                SBMTimePlotR1maxHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
+                InterR1max_growth + xlim(0,20) + 
+                  theme(plot.margin = unit(c(0,1,0,0) , 'lines')), 
+                nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
+                align = "hv")
 
-# ggsave("../Plots/Fig2.png", plot = p1, width = 1920, height = 1107,
-#        scale = 2.5,
-#        units = "px")
-
-
+ggsave("../Plots/FoodFocal.png", plot = p1, width = 1920, height = 1107,
+       scale = 2.5, dpi=300,
+       units = "px")
 ####Fig 3
 
-####____Fig3: (Result 2): Increasing mortality in the focal nursery____#####
+####Fig3  (Result 2): Increasing mortality in the focal nursery#####
 #----------------------------------------------------------------------------------------#
 # Result 2: increased mortality in focal nursery
 #----------------------------------------------------------------------------------------#
@@ -209,7 +299,7 @@ minMaxTime <- data.frame()
 AllTimeData <- data.frame()
 
 for (i in 1:length(BifPar)) {
-  filename <- paste0(Main_files, DataNames[i], ".out", sep = '')
+  filename <- paste0(Time_loc, DataNames[i], ".out", sep = '')
   GetData <- read.table(filename, header = F)
   GiveNames(GetData, maxcohorts = CohNr)
   GetData$Bif = BifPar[i]
@@ -288,8 +378,11 @@ MortTimePlotHighQ_res = ggplot(data =  AllTimeData_HighQ,
 ####Fig3: Growth data figure ####
 #First get average juvenile period#
 HighData <- subset(AllTimeData_HighQ, Bif == 0)
-InterData <- subset(AllTimeData_HighQ, Bif == 0.003)
+InterData <- read.table("../EBTfiles/Files_Main/Fig3_HighQ_InterMortLong.out", header = F)
+GiveNames(InterData, maxcohorts = CohNr)
 
+ggplot(data = subset(InterData, Time < 10000), aes(x = Time, y = Larv_period)) +
+  geom_point()
 
 #Mgeom_point()#Mean period High#
 mean(HighData$Larv_period, na.rm = T) / 250
@@ -313,10 +406,11 @@ bd_min = HighData_pop$BirthDay[index_min]
 index_max = which.max(HighData_pop$DietAge)
 bd_max = HighData_pop$BirthDay[index_max]
 
+
 NoMortFocal_growth = ggplot(data = subset(HighData_pop,
-                                        LCoh < (100-1E-9) & BirthDay == bd_mean),
-                          aes(x = (ACoh) / 250, y = LCoh,
-                              group = BirthDay)) +
+                                          LCoh < (100-1E-9) & BirthDay == bd_mean),
+                            aes(x = (ACoh) / 250, y = LCoh,
+                                group = BirthDay)) +
   geom_path(alpha = .5, size = 2) +
   geom_path(data = subset(HighData_pop,
                           LCoh < (100-1E-9) & (BirthDay == bd_min | BirthDay == bd_max)), alpha = 0.3, size = 1) +
@@ -332,7 +426,7 @@ NoMortFocal_growth = ggplot(data = subset(HighData_pop,
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   NULL
 
-NoMortFocal_growth
+#NoMortFocal_growth
 
 index_mean = which.min(abs(InterData_pop$DietAge - mean(InterData$Larv_period, na.rm = T)))
 bd_mean = InterData_pop$BirthDay[index_mean]
@@ -361,13 +455,13 @@ InterMortFocal_growth =
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   NULL
 
-InterMortFocal_growth
+#InterMortFocal_growth
 
 
 
 
-####Fig3: Combine panels figure 3######
-p2 = ggarrange(MortTimePlotHighQ +
+###Add everything###
+ggarrange(MortTimePlotHighQ +
             theme(axis.title.x=element_blank(),
                   axis.text.x=element_blank(),
                   axis.ticks.x=element_blank(),
@@ -380,10 +474,23 @@ p2 = ggarrange(MortTimePlotHighQ +
           nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
           align = "hv")
 
-# ggsave("../Plots/Fig3.png", plot = p2, width = 1920, height = 1107,
-#        scale = 2.5,
-#        units = "px")
+####Fig3: Combine panels#####
+p2 <- ggarrange(MortTimePlotHighQ +
+                  theme(axis.title.x=element_blank(),
+                        axis.text.x=element_blank(),
+                        axis.ticks.x=element_blank(),
+                        plot.margin = unit(c(0,1,0,0), 'lines')),
+                NoMortFocal_growth + theme(plot.margin = unit(c(0,1,0,0), 'lines')) +
+                  xlim(0,7), 
+                MortTimePlotHighQ_res + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
+                InterMortFocal_growth + xlim(0,7) +
+                  theme(plot.margin = unit(c(0,1,0,0), 'lines')),
+                nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
+                align = "hv")
 
+ggsave("../Plots/MortFocal.png", plot = p2, width = 1920, height = 1107,
+       scale = 2.5, dpi=300,
+       units = "px")
 
 
 
@@ -513,9 +620,9 @@ p3 = ggarrange(MortTimePlotHighQ +
           nrow = 2, ncol = 1, labels = c("A", "B"),
           align = "hv")
 
-# ggsave("../Plots/Fig4.png", plot = p3, width = 1920, height = 1107,
-#        scale = 2.5,
-#        units = "px")
+ggsave("../Plots/MortAdult.png", plot = p3, width = 1920, height = 1107,
+       scale = 2.5, dpi = 300,
+       units = "px")
 
 ####____Fig 5: (Result 4) Effect of loss of connectivity____#####
 
@@ -767,7 +874,7 @@ p4 = ggarrange(ConnTimePlotHighQ +
                ConnHighQHighNSMort + theme(plot.margin = unit(c(0,1,0,0), 'lines')),
                nrow = 2, ncol = 2, labels = c("A", "B", "C", "D"), align = 'hv')
 
-ggsave("../Plots/Fig5.png", plot = p4, width = 1920, height = 1107,
-       scale = 2.5,
+ggsave("../Plots/Connectivity.png", plot = p4, width = 1920, height = 1107,
+       scale = 2.5, dpi = 300,
        units = "px")
 

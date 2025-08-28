@@ -192,7 +192,7 @@ p1 = ggarrange(SBMTimePlotR1maxHighQ +
 p1
 
 ggsave("../Plots/App_nonurs_fig1.png", plot = p1, width = 1920, height = 1107,
-       scale = 2.5,
+       scale = 2.5, dpi = 300,
        units = "px")
 
 
@@ -377,9 +377,9 @@ p2 = ggarrange(MortTimePlotHighQ +
                nrow = 2, ncol = 2, labels = c("A", "C", "B", "D"),
                align = "hv")
 
-# ggsave("../Plots/App_nonurs_fig2.png", plot = p2, width = 1920, height = 1107,
-#        scale = 2.5,
-#        units = "px")
+ggsave("../Plots/App_nonurs_fig2.png", plot = p2, width = 1920, height = 1107,
+       scale = 2.5, dpi = 300,
+       units = "px")
 
 #
 ####____NoNurs appendix Fig 3: (result 3):increased mortality in offshore habitat____#####
@@ -508,9 +508,9 @@ p3 = ggarrange(MortTimePlotHighQ +
                nrow = 2, ncol = 1, labels = c("A", "B"),
                align = "hv")
 
-# ggsave("../Plots/App_nonurs_fig3.png", plot = p3, width = 1920, height = 1107,
-#        scale = 2.5,
-#        units = "px")
+ggsave("../Plots/App_nonurs_fig3.png", plot = p3, width = 1920, height = 1107,
+       scale = 2.5, dpi = 300,
+       units = "px")
 
 ####____NoNurs appendix Fig 4: (Result 4) Effect of loss of connectivity____#####
 
@@ -762,5 +762,5 @@ p4 = ggarrange(ConnTimePlotHighQ +
                nrow = 2, ncol = 2, labels = c("A", "B", "C", "D"), align = 'hv')
 p4
 ggsave("../Plots/App_nonurs_fig4.png", plot = p4, width = 1920, height = 1107,
-       scale = 2.5,
+       scale = 2.5, dpi = 300,
        units = "px")
